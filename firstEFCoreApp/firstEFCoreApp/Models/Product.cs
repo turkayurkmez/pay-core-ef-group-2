@@ -15,5 +15,9 @@
 
         //Navigation Property: İlişkili olduğu entity'ye erişmek (navigasyon) için kullanılan özellik:
         public Category Category { get; set; }
+        public Product()
+        {
+            Category = new Category();
+        }
     }
 }
