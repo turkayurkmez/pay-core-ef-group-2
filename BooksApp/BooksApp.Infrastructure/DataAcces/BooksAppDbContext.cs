@@ -19,6 +19,7 @@ namespace BooksApp.Infrastructure.DataAcces
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Fluent API
             modelBuilder.Entity<BookAuthor>().HasKey(b => new { b.AuthorId, b.BookId });
 
 
@@ -38,22 +39,36 @@ namespace BooksApp.Infrastructure.DataAcces
             Author stephen = new Author { AuthorId = 2, Name = "Stephen King" };
 
             BookAuthor bookAuthor = new BookAuthor { AuthorId = 1, BookId = 1, Order = 1 };
-            modelBuilder.Entity<BookAuthor>().HasData(bookAuthor);
-
+            BookAuthor bookAuthor2 = new BookAuthor { AuthorId = 2, BookId = 2, Order = 1 };
 
             List<BookAuthor> bookAuthors = new() { bookAuthor };
+            modelBuilder.Entity<BookAuthor>().HasData(bookAuthors);
+
+
+
             modelBuilder.Entity<Author>().HasData(isaac, stephen);
 
             Book book1 = new Book
             {
                 BookId = 1,
-                Title = "Test",
-                Description = "Teest"
+                Title = "Vakıf",
+                Description = "Asimov'un muhteşem serisi",
+                //Tags = new List<Tag> { sciFi, horror },
 
 
             };
 
-            modelBuilder.Entity<Book>().HasData(book1);
+            Book book2 = new Book
+            {
+                BookId = 2,
+                Title = "O",
+                Description = "Palyaço korkusu yaratan bir kitap",
+                //Tags = new List<Tag> { sciFi, horror },
+
+
+            };
+
+            modelBuilder.Entity<Book>().HasData(book1, book2);
 
         }
 
