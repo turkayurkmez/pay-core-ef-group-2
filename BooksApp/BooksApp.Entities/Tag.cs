@@ -9,6 +9,6 @@ namespace BooksApp.Entities
         [MaxLength(40)]
         public string TagId { get; set; }
 
-        public ICollection<Book> Books { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
     }
 }

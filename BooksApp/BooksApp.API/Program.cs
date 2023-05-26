@@ -1,3 +1,4 @@
+﻿using BooksApp.API.Services;
 using BooksApp.Infrastructure.DataAcces;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,12 +6,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("db");
-builder.Services.AddDbContext<BooksAppDbContext>(option => option.UseSqlServer(connectionString));
+//Eğer; lazy loadin tekniğini kullanmak isterseniz EF.Proxies paketini yükleyin ve UseLazyLoadingProxies() ext. metodunu kullanın
+builder.Services.AddDbContext<BooksAppDbContext>(option => option.UseLazyLoadingProxies()
+                                                                 .UseSqlServer(connectionString));
+builder.Services.AddScoped<QueryService>();
 
 var app = builder.Build();
 

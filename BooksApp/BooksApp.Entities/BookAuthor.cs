@@ -7,8 +7,8 @@
         public int AuthorId { get; set; }
         public byte Order { get; set; } //Yazarların kapakta yer alma sırası
 
-        public Book Book { get; set; }
-        public Author Author { get; set; }
+        public virtual Book Book { get; set; }
+        public virtual Author Author { get; set; }
 
     }
 }

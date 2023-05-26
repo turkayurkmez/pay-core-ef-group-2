@@ -6,9 +6,12 @@ namespace BooksApp.Infrastructure.DataAcces
     public class BooksAppDbContext : DbContext
     {
         public DbSet<Book> Books { get; set; }
-        public List<Author> Authors { get; set; }
-        public List<PriceOffer> PriceOffers { get; set; }
-        public List<Tag> Tags { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<PriceOffer> PriceOffers { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+
+        public DbSet<Review> Reviews { get; set; }
+
 
         public BooksAppDbContext(DbContextOptions<BooksAppDbContext> options) : base(options)
         {
