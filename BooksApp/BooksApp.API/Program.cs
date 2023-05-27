@@ -13,8 +13,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("db");
 //Eğer; lazy loadin tekniğini kullanmak isterseniz EF.Proxies paketini yükleyin ve UseLazyLoadingProxies() ext. metodunu kullanın
-builder.Services.AddDbContext<BooksAppDbContext>(option => option.UseLazyLoadingProxies()
-                                                                 .UseSqlServer(connectionString));
+builder.Services.AddDbContext<BooksAppDbContext>(option => option.UseSqlServer(connectionString, opt =>
+{
+    //Eğer dbContext'in varsayılan davranışının; Query Splitting olmasını istersek:
+    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
+}));
 builder.Services.AddScoped<QueryService>();
 
 var app = builder.Build();

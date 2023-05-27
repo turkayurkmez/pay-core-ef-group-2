@@ -86,6 +86,8 @@ namespace BooksApp.API.Services
         public FirstBookDto GetBookWithAuthor()
         {
             var firstBook = booksAppDbContext.Books
+                                             .Include(b => b.AuthorsLink)
+                                             .ThenInclude(al => al.Author)
                                              .Where(b => b.BookId == 5)
                                              .Select(b => new FirstBookDto
                                              {
@@ -159,6 +161,99 @@ namespace BooksApp.API.Services
 
             return book;
         }
+
+        public object GetBooksForPerformance()
+        {
+            //Single <-> Split
+            //Birleştimek için SingleQuery
+            //Ayırmak için SplitQuery()
+            var books = booksAppDbContext.Books
+                                         .Include(b => b.Reviews)
+                                         .AsSingleQuery()
+                                         .Include(b => b.Tags)
+                                         .AsSingleQuery()
+                                         .ToList();
+            return books;
+        }
+
+        public object JoinWithLinq()
+        {
+            //var query = from book in booksAppDbContext.Set<Book>() //1. koleksiyon
+            //            join review in booksAppDbContext.Set<Review>() //2. koleksiyon
+            //            on book.BookId equals review.BookId //eşleşme
+            //            select new { book.Title, review.Comment }; //belleğe atılacak sütunlar
+
+            //var query = booksAppDbContext.Books.Join(
+            //       booksAppDbContext.Reviews,
+            //       book => book.BookId,
+            //       review => review.BookId,
+            //       (book, review) => new
+            //       {
+            //           book.Title,
+            //           review.Comment
+            //       }
+
+            //    );
+
+            /*
+             *     
+             *     
+             *           SELECT 
+                            Title, Count(Reviews.ReviewId) as TotalReviewsCount
+                            FROM Books JOIN Reviews
+                            ON Books.BookId = Reviews.BookId  
+                         GROUP By Title
+             *     
+             *     
+             */
+
+            var query = from book in booksAppDbContext.Set<Book>()
+                        join reviews in booksAppDbContext.Set<Review>()
+                           on book.BookId equals reviews.BookId into grouping
+                        select new { Title = book.Title, Count = grouping.Count() };
+
+            return query.ToList();
+        }
+
+        public object GetBooksForYears()
+        {
+            //var query = from book in booksAppDbContext.Set<Book>()
+            //            group book by book.PublishedDate.Value.Year
+            //            into grp
+            //            select new { grp.Key, Count = grp.Count() };
+
+            var query = booksAppDbContext.Books.GroupBy(
+
+                  keySelector: gr => gr.PublishedDate.Value.Year,
+                  elementSelector: book => new { book.Title, book.Price },
+                  resultSelector: (key, collection) => new { key, BooksCount = collection.Count(), MinPrice = collection.Min(b => b.Price) }
+                );
+
+
+            return query;
+        }
+
+        public object GetBooksPage(int page)
+        {
+
+            int pageSize = 2;
+            var result = booksAppDbContext.Books.OrderBy(b => b.BookId)
+                                                .Skip((page - 1) * pageSize)
+                                                .Take(pageSize);
+
+            return result;
+        }
+
+        public object GetAllBooks()
+        {
+            return booksAppDbContext.Books.IgnoreQueryFilters().ToList();
+        }
+
+
+
+
+
+
 
     }
 

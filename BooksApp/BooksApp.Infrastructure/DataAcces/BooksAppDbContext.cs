@@ -25,6 +25,15 @@ namespace BooksApp.Infrastructure.DataAcces
             //Fluent API
             modelBuilder.Entity<BookAuthor>().HasKey(b => new { b.AuthorId, b.BookId });
 
+            modelBuilder.Entity<Book>().Property(b => b.Title).IsRequired().HasMaxLength(320);
+
+            modelBuilder.Entity<Book>().HasQueryFilter(b => !b.SoftDeleted);
+
+
+            modelBuilder.Entity<Book>().Property(b => b.BookType)
+                                       .HasConversion(x => x.ToString(),
+                                                      x => (BookType)Enum.Parse(typeof(BookType), x)
+                                                     );
 
             /*
              * Bir kaç kitap ve yazar gireceğiz.
@@ -73,6 +82,11 @@ namespace BooksApp.Infrastructure.DataAcces
 
             modelBuilder.Entity<Book>().HasData(book1, book2);
 
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
         }
 
     }

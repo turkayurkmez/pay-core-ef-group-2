@@ -4,6 +4,7 @@ using BooksApp.Infrastructure.DataAcces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BooksApp.Infrastructure.Migrations
 {
     [DbContext(typeof(BooksAppDbContext))]
-    partial class BooksAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230526123335_setEnumOnBooks")]
+    partial class setEnumOnBooks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,9 +77,8 @@ namespace BooksApp.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookId"));
 
-                    b.Property<string>("BookType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<int>("BookType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -108,7 +110,7 @@ namespace BooksApp.Infrastructure.Migrations
                         new
                         {
                             BookId = 1,
-                            BookType = "PressedBook",
+                            BookType = 1,
                             Description = "Asimov'un muhteşem serisi",
                             SoftDeleted = false,
                             Title = "Vakıf"
@@ -116,7 +118,7 @@ namespace BooksApp.Infrastructure.Migrations
                         new
                         {
                             BookId = 2,
-                            BookType = "PressedBook",
+                            BookType = 1,
                             Description = "Palyaço korkusu yaratan bir kitap",
                             SoftDeleted = false,
                             Title = "O"

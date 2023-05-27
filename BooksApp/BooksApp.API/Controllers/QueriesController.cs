@@ -95,5 +95,39 @@ namespace BooksApp.API.Controllers
 
             return Ok(book);
         }
+        [HttpGet("[action]")]
+        public IActionResult GetBooksForPerformance()
+        {
+            var books = queryService.GetBooksForPerformance();
+            return Ok(books);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult JoinWithLinq()
+        {
+            var books = queryService.JoinWithLinq();
+            return Ok(books);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult GetBooksForYears()
+        {
+            var books = queryService.GetBooksForYears();
+            return Ok(books);
+        }
+
+        [HttpGet("[action]/{pageNo}")]
+        public IActionResult GetBooksForPage(int pageNo)
+        {
+            var books = queryService.GetBooksPage(pageNo);
+            return Ok(books);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult GetAllBooks()
+        {
+            var books = queryService.GetAllBooks();
+            return Ok(books);
+        }
     }
 }
